@@ -1,0 +1,11 @@
+{# templates/formation/_form_modal_content.html.twig #}
+<h5 class="modal-title">{{ title }}</h5>
+<div class="mt-3">
+  {{ form_start(form, {'attr': {'id': 'formation-form'}}) }}
+    {{ form_widget(form) }}
+<div class="d-flex gap-2 mt-3">
+<button type="submit" class="btn btn-primary">Valider</button>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+</div>
+  {{ form_end(form) }}
+</div>

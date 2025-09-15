@@ -1,0 +1,14 @@
+# config/packages/hwi_oauth.yaml
+hwi_oauth:
+  firewall_names: [main]
+
+  resource_owners:
+    google:
+      type: google
+      client_id: '%env(GOOGLE_CLIENT_ID)%'
+      client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+      scope: "email profile"
+      options:
+        access_type: offline
+        # prompt: consent   #  à décommenter si tu veux forcer le refresh_token à chaque consentement
+ 

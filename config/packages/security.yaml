@@ -1,0 +1,61 @@
+security:
+  # Hash des mots de passe
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+  # Providers utilisateurs
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: username   
+  firewalls:
+    # Firewall dev (profiler, assets, etc.)
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    # Firewall principal
+    main:
+      # Quand un anonyme accède à une page protégée, on le redirige vers le formulaire
+      entry_point: form_login
+      lazy: true
+      provider: app_user_provider
+      # A) Auth classique par formulaire
+      form_login:
+        login_path: app_login        # route qui affiche le formulaire
+        check_path: app_login        # même route vous tu utilisez le SecurityController Maker
+        enable_csrf: true
+        # default_target_path: app_home  # optionnel
+      # Déconnexion
+      logout:
+        path: app_logout
+        # target: app_home
+      # B) HWIOAuth : Google en parallèle (ne remplace pas le form_login)
+      oauth:
+        resource_owners:
+          google: "/login/with-google"   # callback Google (route déclarée dans les routes)
+        login_path: /login                # page de login (affiche form + bouton Google)
+        use_forward: false
+        failure_path: /login
+        oauth_user_provider:
+          service: App\Security\OAuthUserProvider  # ton provider qui crée/lie l'utilisateur
+  # Règles d'accès
+  access_control:
+    # Routes publiques d'auth
+    - { path: ^/login$, roles: PUBLIC_ACCESS }
+    - { path: ^/login/$, roles: PUBLIC_ACCESS }         # pour /login/ (route HWIOAuth)
+    - { path: ^/login/check-google$, roles: PUBLIC_ACCESS }
+    - { path: ^/connect, roles: PUBLIC_ACCESS }      # /connect/google, etc. (routing HWIOAuth)
+    # Tes sections protégées
+    - { path: '^/stagiaire', roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    # - { path: ^/profile, roles: ROLE_USER }
+when@test:
+  security:
+    password_hashers:
+      Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+        algorithm: auto
+        cost: 4        # bcrypt minimal en test
+        time_cost: 3   # argon minimal en test
+        memory_cost: 10
+ 
+ 

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ controller_name }}!{% endblock %}
+
+{% block body %}
+
+    <h1>Hello {{ controller_name }}!</h1>
+
+ <table class="table table-striped table-bordered mt-3">
+        <caption class="h2 text-center" style="caption-side: top;">
+            Liste des Stagiaires ({{ pagination.getTotalItemCount }}):
+        </caption>
+        <thead class="table-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de Naissance</th>
+                <th>Sexe</th>
+                <th>Ville</th>
+                <th>Téléphone</th>
+                <th>eMail</th>
+                    {% if auth %}<th colspan="2">Administration</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in pagination %}
+                <tr>
+                    <td>
+                        <p class="text-success"> {{row}}  </p>
+                    </td>
+                    <td>
+                        {{row.prenom}}
+                    </td>
+                    <td>
+                        {{row.dateNaissance | date('d/m/Y')}}
+                    </td>
+                    <td>
+                        {{row.sexe}}
+                    </td>
+                    <td>
+                        {{row.ville}}
+                    </td>
+                    <td>
+                        {{row.telephone}}
+                    </td>
+                    <td>
+                        {{row.email}}
+                    </td>
+                {% if auth %}
+                    <td><a href="{{ path('edit_stagiaire', {'id': row.id}) }}" class="btn btn-warning" >Éditer</a></td>
+                    <td><a href="{{ path('delete_stagiaire', {'id': row.id}) }}" class="btn btn-danger">Supprimer</a></td>
+                {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% if auth %}
+    <div class="create">
+        <a href="{{ path('stagiaire_new') }}" class="btn btn-success">Créer un stagiaire</a>
+    </div>
+{% endif %}
+<div class="container d-flex align-items-center justify-content-center">
+    {{ knp_pagination_render(pagination) }}
+</div>
+{% endblock %}

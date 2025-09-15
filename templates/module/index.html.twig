@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ModuleController!{% endblock %}
+
+{% block body %}
+
+<div>
+    <h1>Hello {{ controller_name }}!</h1>
+</div>
+
+    <table class="table table-striped table-bordered mt-3">
+        <caption class="h2 text-center" style="caption-side: top;">
+            Liste des modules ({{ modules.getTotalItemCount }}):
+        </caption>
+        <thead class="table-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                    {% if auth %}<th colspan="2">Administration</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in modules %}
+                <tr>
+                    <td>
+                        <p class="text-success"> {{row}}  </p>
+                    </td>
+                    <td>
+                        {{row.categorie}}
+                    </td>
+                {% if auth %}
+                    <td><a href="{{ path('edit_module', {'id': row.id}) }}" class="btn btn-warning" >Éditer</a></td>
+                    <td><a href="{{ path('delete_module', {'id': row.id}) }}" class="btn btn-danger">Supprimer</a></td>
+                {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% if auth %}
+    <div class="create">
+        <a href="{{ path('module_new') }}" class="btn btn-success">Créer un module</a>
+    </div>
+{% endif %}
+<div class="container d-flex align-items-center justify-content-center">
+    {{ knp_pagination_render(modules) }}
+</div>
+{% endblock %}

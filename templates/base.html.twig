@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        {% block meta %}          
+        {% endblock meta %}
+
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">    
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+        {% block stylesheets %} 
+        {% endblock %} 
+
+        {% block javascripts %}
+        {% endblock %} 
+        <script src="{{ asset('tarteaucitron/tarteaucitron.min.js')}}"></script>
+
+        <script type="text/javascript">
+        tarteaucitron.init({
+    	  "privacyUrl": "#policy", /* Url de la politique de confidentialité */
+          "bodyPosition": "top", /* top place le bandeau de consentement au début du code html, mieux pour l'accessibilité */
+
+    	  "hashtag": "#tarteaucitron", /* Hashtag qui permet d'ouvrir le panneau de contrôle  */
+    	  "cookieName": "tarteaucitron", /* Nom du cookie (uniquement lettres et chiffres) */
+    
+    	  "orientation": "middle", /* Position de la bannière (top - bottom - popup - banner) */
+       
+          "groupServices": true, /* Grouper les services par catégorie */
+          "showDetailsOnClick": true, /* Cliquer pour ouvrir la description */
+          "serviceDefaultState": "wait", /* Statut par défaut (true - wait - false) */
+                           
+    	  "showAlertSmall": false, /* Afficher la petite bannière en bas à droite */
+    	  "cookieslist": false, /* Afficher la liste des cookies via une mini bannière */
+           "cookieslistEmbed": false, /* Afficher la liste des cookies dans le panneau de contrôle */
+                           
+          "closePopup": true, /* Afficher un X pour fermer la bannière */
+
+          "showIcon": true, /* Afficher un cookie pour ouvrir le panneau */
+          //"iconSrc": "", /* Optionnel: URL ou image en base64 */
+          "iconPosition": "TopRight", /* Position de l'icons: (BottomRight - BottomLeft - TopRight - TopLeft) */
+
+    	  "adblocker": false, /* Afficher un message si un Adblocker est détecté */
+                           
+          "DenyAllCta" : true, /* Afficher le bouton Tout refuser */
+          "AcceptAllCta" : true, /* Afficher le bouton Tout accepter */
+          "highPrivacy": true, /* Attendre le consentement */
+          "alwaysNeedConsent": true, /* Demander le consentement même pour les services "Privacy by design" */
+                           
+    	  "handleBrowserDNTRequest": false, /* Refuser tout par défaut si Do Not Track est activé sur le navigateur */
+
+    	  "removeCredit": false, /* Retirer le lien de crédit vers tarteaucitron.io */
+    	  "moreInfoLink": true, /* Afficher le lien En savoir plus */
+
+          "useExternalCss": false, /* Mode expert : désactiver le chargement des fichiers .css tarteaucitron */
+          "useExternalJs": false, /* Mode expert : désactiver le chargement des fichiers .js tarteaucitron */
+
+    	  //"cookieDomain": ".my-multisite-domaine.fr", /* Optionnel: domaine principal pour partager le consentement avec des sous domaines */
+                          
+          "readmoreLink": "", /* Changer le lien En savoir plus par défaut */
+
+          "mandatory": true, /* Afficher un message pour l'utilisation de cookies obligatoires */
+          "mandatoryCta": false, /* Afficher un bouton pour les cookies obligatoires (déconseillé) */
+    
+          //"customCloserId": "", /* Optionnel a11y: ID personnalisé pour ouvrir le panel */
+          
+          "googleConsentMode": true, /* Activer le Google Consent Mode v2 pour Google ads & GA4 */
+          "bingConsentMode": true, /* Activer le Bing Consent Mode pour Clarity & Bing Ads */
+          "softConsentMode": false, /* Soft consent mode (le consentement est requis pour charger les tags) */
+
+          "dataLayer": false, /* Envoyer un événement dans dataLayer avec le statut des services */
+          "serverSide": false, /* Server side seulement, les tags ne sont pas chargé côté client */
+          
+          "partnersList": true /* Afficher le détail du nombre de partenaires sur la bandeau */
+        });
+        </script>
+        <script>
+            (tarteaucitron.job = tarteaucitron.job || []).push('googlesignin');
+        </script>
+    </head>
+    <body>
+        <header class="sticky-top">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="{{ path('formation_index') }}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_session') }}">Sessions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_module') }}">Modules</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_categorie') }}">Catégories</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_stagiaire') }}">Stagiaires</a></li>
+
+                    {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">LogOut [{{app.user.username}}]</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">LogIn</a></li>
+                    {% endif %}
+
+                    </ul>
+                </div>
+            </nav>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </header>
+        <main>
+            <div class="container">
+                {% block body %}{% endblock %}
+            </div>
+        </main>
+        
+        <footer class="fixed-bottom">
+            <small>Nada inc.</small>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+        {% block script %}{% endblock %}
+    </body>
+</html>

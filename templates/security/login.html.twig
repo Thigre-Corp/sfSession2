@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {% if error ?? null %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="username">Username</label>
+        <input type="text" {#value="{{ last_username }}"#} name="_username" id="username" class="form-control" autocomplete="username" required autofocus>
+        <label for="password">Password</label>
+        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+        {#
+            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+            See https://symfony.com/doc/current/security/remember_me.html
+
+            <div class="checkbox mb-3">
+                <input type="checkbox" name="_remember_me" id="_remember_me">
+                <label for="_remember_me">Remember me</label>
+            </div>
+        #}
+
+        <div class="d-flex mt-1">
+            <button class="btn btn-lg btn-primary" type="submit">
+                Sign in
+            </button>
+            <a class="btn btn-lg btn-warning mx-5" href="{{path('app_register')}}">Register</a>
+
+        </form>
+        {% if (app.request.cookies.get('tarteaucitron')) == '!gcmsecurity=false!googlesignin=true' %}
+            {% for owner in hwi_oauth_resource_owners() %}
+                <a class="btn btn-success" href="{{ hwi_oauth_login_url(owner) }}">Connect with {{ owner | trans({}, 'HWIOAuthBundle') }}</a> <br />
+            {% endfor %}
+        {% endif %}
+        </div>
+        <p>
+            {% if  app.user %}
+                {% for row in app.user %}
+                <p>{{row}}</p>
+                {% endfor %}
+            {% endif %}
+
+        </p>
+        {% block hwi_oauth_content %}
+        {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{# templates/formation/index.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter Session{% endblock %}
+ 
+{% block body %}
+<h2>{{title}}</h2>
+ 
+{% if auth %}
+
+{{form(createForm)}}
+
+
+{% endif %}
+
+{% endblock %}

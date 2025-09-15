@@ -1,0 +1,16 @@
+{# templates/formation/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer Module{% endblock %}
+ 
+{% block body %}
+<h2>{{title}}</h2>
+ 
+{% if auth %}
+
+{{form(editForm)}}
+
+
+{% endif %}
+
+{% endblock %}

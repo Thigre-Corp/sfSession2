@@ -1,0 +1,10 @@
+# Redirection vers le provider (utilisée par ton bouton "Se connecter avec Google")
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.php"
+    prefix:   /connect
+    methods: [GET, POST]
+ 
+# Callback Google (doit matcher security.yaml -> resource_owners.google: "/login/check-google")
+google_login:
+    path: /login/with-google
+    methods: [GET, POST]

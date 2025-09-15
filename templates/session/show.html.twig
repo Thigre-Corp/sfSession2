@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SessionController!{% endblock %}
+
+{% block body %}
+
+<div>
+    <h1>Hello {{ controller_name }}!</h1>
+
+    <table class="table table-striped table-bordered mt-3">
+        <caption class="h2 text-center caption-top">
+            Modules de la session {{session}} - {{businessDays}} Jours Ouvrés - {{businessDaysLeft}} Restants....
+        </caption>
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    Module
+                </th>
+                <th class="w-25">
+                    Nb Jours
+                </th>
+            {% if auth %}
+                <th class="w-25">
+                    Administration
+                </th>
+            {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for programme in session.programmes %}
+            <tr>
+                <td><a href="">{{programme}}</a></td>
+                <td>{{programme.nombreJour}}</td>
+            {% if auth %}
+                <td><a href="{{ path('removeProgramme_session', {'id': session.id, 'prog_id': programme.id} ) }}" class="btn  btn-danger">RETIRER</a></td>
+            {% endif %}
+            </tr>
+            {% endfor %}
+            {% if auth  %} 
+               {% if  businessDaysLeft  %}
+               {{form_start(form)}}
+                    <tr  class="table-primary">
+                            <td>
+                                {{form_widget(form.module)}}
+                            </td>
+                            <td>
+                                {{form_widget(form.nombreJour)}}
+                            </td>
+                            <td>
+                                {{form_widget(form.submit, {'label' : 'AJOUTER'})}}
+                                {{ form_rest(form) }}
+                            </td>
+                        </tr>
+                {{form_end(form)}}
+                {% else %}
+                    <tr class="table-primary" >
+                        <td colspan="3">Plus de jours de formation dispos pour ajouter un nouveau module</td>
+                    </tr>
+                    {% endif %}
+                    {% endif %}
+        </tbody>
+    </table>
+
+    <table class="table table-striped table-bordered mt-3">
+        <caption class="h2 text-center caption-top">
+            Stagiaires inscrits - {{session.StagiairesNumber}} Pl.<br>
+            Réservations - {{session.nombrePlacesReservees}} Pl.
+        </caption>
+{% if is_granted('ROLE_USER') %}
+                
+
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    Nom - Prénom
+                </th>
+                {% if ( auth ) %}
+                <th class="w-25">
+                    Administration
+                </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+             {% for stagiaire in session.stagiaires %}
+            <tr>
+                <td><a href="{{ path('show_stagiaire', {'id' : stagiaire.Id} ) }}">{{stagiaire}}</a></td>
+                {% if auth %}
+                <td><a href="{{ path('removeStagiaire_session', {'id': session.id, 'stag_id': stagiaire.id} ) }}" class="btn  btn-danger">RETIRER</a></td>    
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+{% endif %}
+    </table>
+{% if auth %}
+    
+
+    <table class="table table-striped table-bordered mt-3">
+        <caption class="h2 text-center caption-top">
+            Stagiaires non-inscrits - {{(session.nombrePlacesTotales -  (session.nombrePlacesReservees + session.StagiairesNumber))}} Pl. Restantes.
+        </caption>
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    Nom - Prénom
+                </th>
+                <th class="w-25">
+                    Administration
+                </th>
+            </tr>
+        </thead>
+{% if is_granted('ROLE_USER') %}
+        <tbody>
+                
+
+            {% for stagiaire in learnersNotInSession %}
+            <tr>
+                <td><a href="{{ path('show_stagiaire', {'id' : stagiaire.id} ) }}">{{stagiaire}}</a></td>
+                {% if (session.nombrePlacesTotales -  (session.nombrePlacesReservees + session.StagiairesNumber)) > 0 %}
+                    <td><a href="{{ path('addStagiaire_session', {'id': session.id, 'stag_id': stagiaire.id} ) }}" class="btn btn-success">AJOUTER</a></td>
+                {% else %}
+                    <td><p class="btn btn-dark">SESSION PLEINE</p></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+{% endif %}
+    </table>
+{% endif %}
+</div>
+{% endblock %}

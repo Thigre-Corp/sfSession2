@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.username) }}
+        {{ form_row(registrationForm.email) }}
+        <label for="registration_form_plainPassword_first" class="required">Mot de Passe</label>
+        <div class="input-group">
+            {{ form_widget(registrationForm.plainPassword.first) }}
+            <button id="toggle-password1"
+                style="position: relative;
+                        right: 0;
+                        top:0;
+                        "
+                class="btn btn-primary"
+                onclick="myFunction1()">👁️</button>
+        </div>
+
+        <label for="registration_form_plainPassword_second" class="required">Mot de Passe (répéter) </label>
+        <div class="input-group">
+            {{ form_widget(registrationForm.plainPassword.second)}}
+
+            <button id="toggle-password2"
+                style="position: relative;
+                        right: 0;
+                        top:0;
+                        "
+                class="btn btn-primary"
+                onclick="myFunction2()">👁️</button>
+        </div>
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn btn-lg btn-primary mt-1">S'enregistrer</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
+
+{% block script %}
+<script>
+
+    console.log("ready...");
+
+ function myFunction1() {
+  const x = document.getElementById("registration_form_plainPassword_first");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+ function myFunction2() {
+  const x = document.getElementById("registration_form_plainPassword_second");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+
+</script>
+
+{% endblock %}
+
